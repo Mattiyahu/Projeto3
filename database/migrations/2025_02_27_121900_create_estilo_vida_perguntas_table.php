@@ -13,6 +13,8 @@ return new class extends Migration
     {
         Schema::create('estilo_vida_perguntas', function (Blueprint $table) {
             $table->id();
+            $table->string('pergunta_1')->default('Você pratica atividades físicas regularmente?');
+            $table->string('opcoes_1')->default('Sim,Não,Às vezes');
             $table->timestamps();
         });
     }
