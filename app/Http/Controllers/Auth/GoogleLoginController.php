@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Laravel\Socialite\Facades\Socialite;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 use App\Providers\RouteServiceProvider;
 use App\Http\Controllers\Controller;
 
@@ -20,17 +21,21 @@ class GoogleLoginController extends Controller
     public function handleGoogleCallback()
     {
         $googleUser = Socialite::driver('google')->stateless()->user();
-        $user = User::where('email', $googleUser->email)->first();
-        if (!$user) {
-            $user = User::create([
-                'name' => $googleUser->name,
-                'email' => $googleUser->email,
-                'password' => Hash::make(rand(100000, 999999))
-            ]);
-        }
+
+        $user = User::updateOrCreate([
+            'email' => $googleUser->getEmail(),
+        ], [
+            'name' => $googleUser->getName(),
+            'google_id' => $googleUser->getId(),
+            'password' => bcrypt(Str::random(16)), // Senha aleatória
+        ]);
 
         Auth::login($user);
 
-        return redirect(RouteServiceProvider::HOME);
+        if (!$user->cadastro_completo) {
+            return redirect()->route('cadastro');
+        }
+
+        return redirect()->route('dashboard');
     }
 }

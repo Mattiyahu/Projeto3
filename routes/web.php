@@ -2,6 +2,8 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\GoogleLoginController;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\CadastroController; // Adicione esta linha
 
 /*
 |--------------------------------------------------------------------------
@@ -13,10 +15,17 @@ use App\Http\Controllers\Auth\GoogleLoginController;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
+Route::get('/cadastro', [CadastroController::class, 'index'])->name('cadastro');
+Route::post('/cadastro', [CadastroController::class, 'store'])->name('cadastro.store');
+
+Route::middleware(['auth', 'verifica.cadastro'])->group(function () {
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+});
 
 // Cleaned up routes for Google login
 Route::get('/google/redirect', [GoogleLoginController::class, 'redirectToGoogle'])->name('google.redirect');
 Route::get('/google/callback', [GoogleLoginController::class, 'handleGoogleCallback'])->name('google.callback');
+
 Route::get('/', function () {
     return view('welcome');
 });
@@ -30,7 +39,5 @@ Route::middleware([
     config('jetstream.auth_session'),
     'verified',
 ])->group(function () {
-    Route::get('/dashboard', function () {
-        return view('dashboard');
-    })->name('dashboard');
+    // Remove the duplicate dashboard route here
 });
