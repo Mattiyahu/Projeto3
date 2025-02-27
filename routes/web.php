@@ -1,7 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Auth\GoogleController;
+use App\Http\Controllers\Auth\GoogleLoginController;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -12,11 +13,17 @@ use App\Http\Controllers\Auth\GoogleController;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
-Route::get('auth/google', [GoogleController::class, 'redirectToGoogle']);
-Route::get('auth/google/callback', [GoogleController::class, 'handleGoogleCallback']);
+
+// Cleaned up routes for Google login
+Route::get('/google/redirect', [GoogleLoginController::class, 'redirectToGoogle'])->name('google.redirect');
+Route::get('/google/callback', [GoogleLoginController::class, 'handleGoogleCallback'])->name('google.callback');
 Route::get('/', function () {
     return view('welcome');
 });
+
+Route::get('/home', function () {
+    return redirect()->route('dashboard');
+})->name('home');
 
 Route::middleware([
     'auth:sanctum',
