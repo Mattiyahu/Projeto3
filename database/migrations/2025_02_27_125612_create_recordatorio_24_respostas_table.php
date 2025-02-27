@@ -28,7 +28,7 @@ return new class extends Migration
             $table->enum('velocidade', ['Devagar', 'Normal', 'Rápida'])->nullable();
             
             $table->text('observacoes')->nullable();
-            $table->timestamps();
+
         });
     }
 

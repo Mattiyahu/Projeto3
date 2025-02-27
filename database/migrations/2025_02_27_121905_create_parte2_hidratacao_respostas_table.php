@@ -13,7 +13,21 @@ return new class extends Migration
     {
         Schema::create('parte2_hidratacao_respostas', function (Blueprint $table) {
             $table->id();
-            $table->timestamps();
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->foreignId('parte2_hidratacao_pergunta_id')->constrained('parte2_hidratacao_perguntas')->onDelete('cascade');
+            
+            // Respostas emocionais relacionadas à pergunta
+            $table->enum('sentimento_durante', ['Calmo', 'Ansioso', 'Triste', 'Irritado', 'Feliz', 'Outro'])->nullable();
+            $table->string('sentimento_outro')->nullable();
+            $table->enum('tipo_fome', ['Fome física', 'Fome emocional', 'Ambos'])->nullable();
+            $table->enum('sentimento_apos', ['Satisfeito', 'Culpado', 'Indiferente', 'Energizado', 'Outro'])->nullable();
+            
+            // Contexto da resposta
+            $table->boolean('sozinho')->nullable();
+            $table->boolean('distraido')->nullable();
+            $table->enum('velocidade', ['Devagar', 'Normal', 'Rápida'])->nullable();
+            
+            $table->text('observacoes')->nullable();
         });
     }
 
