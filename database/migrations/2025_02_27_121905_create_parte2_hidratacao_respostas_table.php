@@ -14,7 +14,9 @@ return new class extends Migration
         Schema::create('parte2_hidratacao_respostas', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
-            $table->foreignId('parte2_hidratacao_pergunta_id')->constrained('parte2_hidratacao_perguntas')->onDelete('cascade');
+            $table->foreignId('parte2_hidratacao_pergunta_id')->constrained('parte2_hidratacao_perguntas', 'hidratacao_pergunta_fk')->onDelete('cascade')->name('fk_hidratacao_pergunta');
+            $table->text('resposta');
+            $table->timestamps();
             
             // Respostas emocionais relacionadas à pergunta
             $table->enum('sentimento_durante', ['Calmo', 'Ansioso', 'Triste', 'Irritado', 'Feliz', 'Outro'])->nullable();
